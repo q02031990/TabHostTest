@@ -17,7 +17,7 @@ import tiengduc123.com.tabhosttest.Fragment.Fragment2;
 import tiengduc123.com.tabhosttest.Fragment.Fragment3;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
 
     ViewPager viewPager;
     TabHost tabHost;
@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //initTabHost();
         initViewPage();
+        initTabHost();
     }
 
     void initTabHost(){
@@ -42,22 +42,10 @@ public class MainActivity extends AppCompatActivity {
             tabSpec.setContent(new FakeContent(getApplicationContext()));
             tabHost.addTab(tabSpec);
         }
-        //tabHost.setOnTabChangedListener(this);
+        tabHost.setOnTabChangedListener(this);
     }
 
-    void initViewPage(){
-        viewPager = (ViewPager) findViewById(R.id.viewPage);
-        List<Fragment> listFragment = new ArrayList<Fragment>();
-        listFragment.add(new Fragment1());
-        listFragment.add(new Fragment2());
-        listFragment.add(new Fragment3());
-
-        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(), listFragment);
-        viewPager.setAdapter(adapter);
-        //viewPager.setOnPageChangeListener(this);
-    }
-
-    /*@Override
+    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
@@ -74,10 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onTabChanged(String tabId) {
-        int tabCurrent = tabHost.getCurrentTab();
-        viewPager.setCurrentItem(tabCurrent);
+        int currentTabItem = tabHost.getCurrentTab();
+        viewPager.setCurrentItem(currentTabItem);
     }
-*/
+
     public class FakeContent implements TabHost.TabContentFactory{
 
         Context context;
@@ -93,7 +81,16 @@ public class MainActivity extends AppCompatActivity {
             return fakeView;
         }
     }
+    void initViewPage(){
+        viewPager = (ViewPager) findViewById(R.id.viewPage);
+        List<Fragment> listFragment = new ArrayList<Fragment>();
+        listFragment.add(new Fragment1());
+        listFragment.add(new Fragment2());
+        listFragment.add(new Fragment3());
 
-
+        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(), listFragment);
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(this);
+    }
 
 }
